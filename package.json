@@ -1,0 +1,31 @@
+{
+  "name": "clean-db-logs",
+  "version": "0.1.0",
+  "main": "./lib/index.js",
+  "author": {
+    "name": "Florent Detry",
+    "email": "florent@igloo.be"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/mysql": "^2.15.5",
+    "@types/node": "^10.5.1",
+    "@types/yargs": "^11.0.0",
+    "dsn-parser": "^1.0.1",
+    "mysql": "^2.15.0",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2",
+    "yargs": "^12.0.1"
+  },
+  "files": [
+    "./bin/*",
+    "./lib/*"
+  ],
+  "typings": "./lib/index.d.ts",
+  "scripts": {
+    "start": "tsc -w",
+    "build": "tsc",
+    "lint": "tslint -c tslint.json src/**/*.ts",
+    "prepublish": "npm run build"
+  }
+}
