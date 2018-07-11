@@ -1,5 +1,9 @@
 
 import * as mysql from "promise-mysql";
+import { $log } from "ts-log-debug";
+
+$log.level = "debug";
+$log.name = "Cleaner";
 
 export interface ICleanerOptions {
   dsn: string;
@@ -7,8 +11,9 @@ export interface ICleanerOptions {
   timeField?: string;
   timeValue?: number;
   filter?: IFilter[];
-  verbose?: boolean;
   limit?: number;
+  debug?: boolean;
+  dryRun?: boolean;
 }
 
 export interface IFilter {
@@ -23,18 +28,24 @@ class Cleaner {
 
   constructor(options: ICleanerOptions) {
     this.options = options;
+    if (this.options.debug) {
+      this.debug(options);
+    }
   }
 
   public async start() {
     const query = this.generateQuery();
+    this.debug(query);
     const connection = await mysql.createConnection(this.options.dsn);
     const res = await connection.query(query);
+    this.debug(res);
     connection.end();
     return res;
   }
 
   private generateQuery() {
-    const sql = ["DELETE FROM ??"];
+    const sql = [this.options.dryRun ? "SELECT count(*) AS 'affectedRows'" : "DELETE"];
+    sql.push("FROM ??");
     const values: any[] = [this.options.table];
 
     if (this.options.filter || this.options.timeField) {
@@ -61,6 +72,12 @@ class Cleaner {
     }
 
     return mysql.format(sql.join(" "), values);
+  }
+
+  private debug(data: any) {
+    if (this.options.debug) {
+      $log.debug(data);
+    }
   }
 
 }

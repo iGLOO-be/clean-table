@@ -6,12 +6,14 @@
 ```
 $ clean-table --help
 Options:
-  --help        Affiche de l'aide                                      [booléen]
-  --version     Affiche le numéro de version                           [booléen]
-  --dsn                                                                 [requis]
-  --table, -t   Table name                                              [requis]
-  --time-field  Column name
-  --time-value  Number of days                                          [nombre]
-  --filter      [COLUMN] [VALUE]                                       [tableau]
-  --limit       Max record deleted                      [nombre] [défaut: 50000]
+  --help               Show help                                       [boolean]
+  --version            Show version number                             [boolean]
+  --dsn                                                               [required]
+  --table, -t          Table name                                     [required]
+  --time-field         Column name
+  --time-value         Number of days                                   [number]
+  --filter             [COLUMN] [VALUE]                                  [array]
+  --limit              Max record deleted              [number] [default: 50000]
+  --debug                                                              [boolean]
+  --dry-run, --dryrun                                                  [boolean]
 ```

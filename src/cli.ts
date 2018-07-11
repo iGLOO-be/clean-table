@@ -1,10 +1,24 @@
+/* tslint:disable:no-console */
 
 import * as yargs from "yargs";
 import Cleaner, { ICleanerOptions } from "./Cleaner";
 
-function start(cliArgs: any) {
+async function start(cliArgs: any) {
   const cleaner = new Cleaner(cliArgs.argv as ICleanerOptions);
-  cleaner.start();
+  try {
+    const result = await cleaner.start();
+    if (Array.isArray(result)) {
+      // Dry run
+      console.log(`Affected rows : ${result[0].affectedRows}`);
+    } else {
+      // Delete
+      console.log(`Affected rows : ${result.affectedRows}`);
+    }
+    process.exit(0);
+  } catch (err) {
+    console.error("ERROR : " + err.message);
+    process.exit(1);
+  }
 }
 
 const args = yargs
@@ -39,14 +53,19 @@ const args = yargs
     return filters.map((filter) => ({ column: filter[0], value: filter[1] }));
   })
 
-  // .option("verbose", {
-  //   boolean: true,
-  // })
-
   .option("limit", {
     default: 50000,
     describe: "Max record deleted",
     number: true,
+  })
+
+  .option("debug", {
+    boolean: true,
+  })
+
+  .option("dry-run", {
+    alias: "dryrun",
+    boolean: true,
   });
 
 start(args);
