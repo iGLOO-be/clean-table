@@ -34,8 +34,6 @@ const prepareDB = async () => {
   connection.end();
 };
 
-
-
 beforeEach(() => prepareDB());
 
 test("Should filter on time", async () => {
