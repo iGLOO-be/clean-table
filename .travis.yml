@@ -1,0 +1,14 @@
+
+services:
+  - mysql
+
+language: node_js
+node_js:
+  - lts
+  - stable
+
+before_install:
+  - mysql -e 'CREATE DATABASE `cleaner-log-test`;'
+
+script:
+  - yarn test

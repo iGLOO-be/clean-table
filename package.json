@@ -1,5 +1,5 @@
 {
-  "name": "clean-db-logs",
+  "name": "clean-table",
   "version": "0.1.0",
   "main": "./lib/index.js",
   "author": {
