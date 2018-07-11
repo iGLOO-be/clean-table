@@ -7,13 +7,7 @@ async function start(cliArgs: any) {
   const cleaner = new Cleaner(cliArgs.argv as ICleanerOptions);
   try {
     const result = await cleaner.start();
-    if (Array.isArray(result)) {
-      // Dry run
-      console.log(`Affected rows : ${result[0].affectedRows}`);
-    } else {
-      // Delete
-      console.log(`Affected rows : ${result.affectedRows}`);
-    }
+    console.log(`Affected rows : ${result.affectedRows}`);
     process.exit(0);
   } catch (err) {
     console.error("ERROR : " + err.message);

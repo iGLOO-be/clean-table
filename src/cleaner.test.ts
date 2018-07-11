@@ -3,8 +3,14 @@ import * as moment from "moment";
 import * as mysql from "promise-mysql";
 import Cleaner from "./Cleaner";
 
+const mysqlConnectionOptions = { user: "root", database: "cleaner-log-test" };
+const connectionOptions = {
+  dsn: "mysql://root@localhost:3306/cleaner-log-test",
+  table: "logs",
+};
+
 const prepareDB = async () => {
-  const connection = await mysql.createConnection({ user: "root", database: "cleaner-log-test" });
+  const connection = await mysql.createConnection(mysqlConnectionOptions);
   await connection.query("DROP TABLE IF EXISTS `logs`");
   await connection.query(`
     CREATE TABLE \`logs\` (
@@ -28,10 +34,7 @@ const prepareDB = async () => {
   connection.end();
 };
 
-const connectionOptions = {
-  dsn: "mysql://root@localhost:3306/cleaner-log-test",
-  table: "logs",
-};
+
 
 beforeEach(() => prepareDB());
 
@@ -78,4 +81,18 @@ test("Should filter on time and field", async () => {
   });
   const result = await cleaner.start();
   expect(result.affectedRows).toBe(1);
+});
+
+test("Should not delete rows", async () => {
+  const cleaner = new Cleaner({
+    ...connectionOptions,
+    dryRun: true,
+  });
+  const connection = await mysql.createConnection(mysqlConnectionOptions);
+  const [{ nb }] = await connection.query("SELECT count(*) AS nb FROM logs");
+  const result = await cleaner.start();
+  expect(result.affectedRows).toBeGreaterThan(0);
+  const [{ nb: nbAfter }] = await connection.query("SELECT count(*) AS nb FROM logs");
+  connection.end();
+  expect(nb).toBe(nbAfter);
 });

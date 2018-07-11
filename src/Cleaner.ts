@@ -37,7 +37,10 @@ class Cleaner {
     const query = this.generateQuery();
     this.debug(query);
     const connection = await mysql.createConnection(this.options.dsn);
-    const res = await connection.query(query);
+    let res = await connection.query(query);
+    if (Array.isArray(res)) {
+      res = res[0];
+    }
     this.debug(res);
     connection.end();
     return res;
