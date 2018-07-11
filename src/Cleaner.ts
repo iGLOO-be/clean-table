@@ -1,11 +1,11 @@
 
-import * as mysql from "mysql";
+import * as mysql from "promise-mysql";
 
 export interface ICleanerOptions {
   dsn: string;
   table: string;
   timeField?: string;
-  timeValue?: string;
+  timeValue?: number;
   filter?: IFilter[];
   verbose?: boolean;
   limit?: number;
@@ -20,28 +20,17 @@ export default
 class Cleaner {
 
   private readonly options: ICleanerOptions;
-  private readonly connection: any;
 
   constructor(options: ICleanerOptions) {
     this.options = options;
-    this.connection = mysql.createConnection(options.dsn);
   }
 
-  public start() {
+  public async start() {
     const query = this.generateQuery();
-
-    this.connection.connect();
-
-    console.log(query);
-
-    this.connection.query(query, (error: any, results: any) => {
-      if (error) {
-        throw error;
-      }
-      console.log(results);
-    });
-
-    this.connection.end();
+    const connection = await mysql.createConnection(this.options.dsn);
+    const res = await connection.query(query);
+    connection.end();
+    return res;
   }
 
   private generateQuery() {
@@ -71,10 +60,7 @@ class Cleaner {
       values.push(this.options.limit);
     }
 
-    return {
-      sql: sql.join(" "),
-      values,
-    };
+    return mysql.format(sql.join(" "), values);
   }
 
 }

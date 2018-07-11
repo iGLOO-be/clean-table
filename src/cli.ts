@@ -2,8 +2,8 @@
 import * as yargs from "yargs";
 import Cleaner, { ICleanerOptions } from "./Cleaner";
 
-function start(args: any) {
-  const cleaner = new Cleaner(args.argv as ICleanerOptions);
+function start(cliArgs: any) {
+  const cleaner = new Cleaner(cliArgs.argv as ICleanerOptions);
   cleaner.start();
 }
 
@@ -36,12 +36,12 @@ const args = yargs
     for (let i = 0; i < opt.length; i += chunk) {
       filters.push(opt.slice(i, i + chunk));
     }
-    return filters.map((filter) => ({ column: filter[0], value: filter[1] }))
+    return filters.map((filter) => ({ column: filter[0], value: filter[1] }));
   })
 
-  .option("verbose", {
-    boolean: true,
-  })
+  // .option("verbose", {
+  //   boolean: true,
+  // })
 
   .option("limit", {
     default: 50000,

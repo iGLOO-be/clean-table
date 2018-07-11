@@ -34,5 +34,8 @@
 	"include": [
 		"typings/**/*",
 		"src/**/*"
+	],
+	"exclude": [
+		"**/*.test.ts"
 	]
 }
