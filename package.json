@@ -12,6 +12,7 @@
     "@types/node": "^10.5.1",
     "@types/yargs": "^11.0.0",
     "promise-mysql": "^3.3.1",
+    "prompt-confirm": "^2.0.4",
     "ts-log-debug": "^4.0.4",
     "tslint": "^5.10.0",
     "typescript": "^2.9.2",

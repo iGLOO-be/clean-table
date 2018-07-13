@@ -15,5 +15,6 @@ Options:
   --filter             [COLUMN] [VALUE]                                  [array]
   --limit              Max record deleted              [number] [default: 50000]
   --debug                                                              [boolean]
-  --dry-run, --dryrun                                                  [boolean]
+  --dry-run, --dryrun  See the number of rows affected                 [boolean]
+  --yes, -y            Bypass the confirm prompt                       [boolean]
 ```

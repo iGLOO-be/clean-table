@@ -4,7 +4,18 @@ import * as yargs from "yargs";
 import Cleaner, { ICleanerOptions } from "./Cleaner";
 
 async function start(cliArgs: any) {
-  const cleaner = new Cleaner(cliArgs.argv as ICleanerOptions);
+  const { argv } = cliArgs;
+
+  if (!argv.dryRun && !argv.yes) {
+    const Confirm = require("prompt-confirm");
+    const prompt = new Confirm("Ready ?");
+    const answer = await prompt.run();
+    if (!answer) {
+      process.exit(0);
+    }
+  }
+
+  const cleaner = new Cleaner(argv as ICleanerOptions);
   try {
     const result = await cleaner.start();
     console.log(`Affected rows : ${result.affectedRows}`);
@@ -60,6 +71,13 @@ const args = yargs
   .option("dry-run", {
     alias: "dryrun",
     boolean: true,
+    describe: "See the number of rows affected",
+  })
+
+  .option("yes", {
+    alias: "y",
+    boolean: true,
+    describe: "Bypass the confirm prompt",
   });
 
 start(args);
