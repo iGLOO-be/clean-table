@@ -44,6 +44,11 @@ const args = yargs
     number: true,
   })
   .implies("time-field", "time-value")
+  .option("time-type", {
+    choices: ["date", "datetime"],
+    default: "datetime",
+    describe: "Type of time-field",
+  })
 
   .option("filter", {
     array: true,

@@ -12,6 +12,8 @@ Options:
   --table, -t          Table name                                     [required]
   --time-field         Column name
   --time-value         Number of days                                   [number]
+  --time-type          Type of time-field
+                             [choices: "date", "datetime"] [default: "datetime"]
   --filter             [COLUMN] [VALUE]                                  [array]
   --limit              Max record deleted              [number] [default: 50000]
   --debug                                                              [boolean]

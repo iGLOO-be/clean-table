@@ -36,14 +36,26 @@ const prepareDB = async () => {
 
 beforeEach(() => prepareDB());
 
-test("Should filter on time", async () => {
+test("Should filter on time (date)", async () => {
   const cleaner = new Cleaner({
     ...connectionOptions,
     timeField: "creation",
+    timeType: "date",
     timeValue: 3,
   });
   const result = await cleaner.start();
   expect(result.affectedRows).toBe(2);
+});
+
+test("Should filter on time (datetime)", async () => {
+  const cleaner = new Cleaner({
+    ...connectionOptions,
+    timeField: "creation",
+    timeType: "datetime",
+    timeValue: 3,
+  });
+  const result = await cleaner.start();
+  expect(result.affectedRows).toBe(3);
 });
 
 test("Should filter on field", async () => {

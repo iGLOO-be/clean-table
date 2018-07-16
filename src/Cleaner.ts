@@ -10,6 +10,7 @@ export interface ICleanerOptions {
   table: string;
   timeField?: string;
   timeValue?: number;
+  timeType?: string;
   filter?: IFilter[];
   limit?: number;
   debug?: boolean;
@@ -47,24 +48,38 @@ class Cleaner {
   }
 
   private generateQuery() {
-    const sql = [this.options.dryRun ? "SELECT count(*) AS 'affectedRows'" : "DELETE"];
+    const {
+      dryRun,
+      table,
+      filter,
+      timeField,
+      timeValue,
+      timeType = "datetime",
+    } = this.options;
+    const sql = [dryRun ? "SELECT count(*) AS 'affectedRows'" : "DELETE"];
     sql.push("FROM ??");
-    const values: any[] = [this.options.table];
+    const values: any[] = [table];
 
-    if (this.options.filter || this.options.timeField) {
+    if (filter || timeField) {
       sql.push("WHERE 1 = 1");
 
-      if (this.options.timeField) {
-        sql.push("AND ?? <= DATE_ADD(DATE(NOW()), INTERVAL - ? DAY)");
-        values.push(this.options.timeField);
-        values.push(this.options.timeValue);
+      if (timeField) {
+        sql.push("AND ?? <= DATE_ADD(");
+        if (timeType === "date") {
+          sql.push("DATE(NOW())");
+        } else {
+          sql.push("NOW()");
+        }
+        sql.push(", INTERVAL - ? DAY)");
+        values.push(timeField);
+        values.push(timeValue);
       }
 
-      if (this.options.filter) {
-        for (const filter of this.options.filter) {
+      if (filter) {
+        for (const iFilter of filter) {
           sql.push("AND ?? = ?");
-          values.push(filter.column);
-          values.push(filter.value);
+          values.push(iFilter.column);
+          values.push(iFilter.value);
         }
       }
     }
